@@ -1,32 +1,48 @@
 # Power BI Embedded in 5 Minutes: sample code
 
-Demo code for the YouTube series. Each folder matches one video and runs on its own;
-shared plumbing (auth, report lookup, embed token) lives in `shared/powerbi.js`.
+Sample code for the video series. Each folder matches one video and runs on its own;
+the shared plumbing (sign-in, embed tokens, export) lives in `shared/`.
 
 | Folder | Video | Run |
 |---|---|---|
-| `05-first-embed` | Your first embedded report (app owns data) | `npm run ep05` |
-| `06-rls` | Row-level security with an effective identity | `npm run ep06` |
+| `04-service-principal` | Set up a service principal | `npm run ep04` |
+| `05-first-embed` | Your first embedded report in under 50 lines | `npm run ep05` |
+| `06-rls` | Row-level security for embedded reports | `npm run ep06` |
+| `08-capacity` | Capacity and cost: pause and resume from code | `npm run ep08 -- status` |
+| `09-sdk-tricks` | 5 JavaScript SDK tricks | `npm run ep09` |
+| `10-token-refresh` | Embed tokens: expiry and refresh | `npm run ep10` |
+| `11-export` | Export embedded reports to PDF and PowerPoint | `npm run ep11` |
+| `13-single-visual` | Embed a single visual | `npm run ep13` |
+| `14-scheduled-export` | Schedule report emails | `npm run ep14` |
+| `16-edit-mode` | Let customers build their own reports | `npm run ep16` |
 
-More folders are added as episodes are recorded.
+The other videos in the series are concepts and portal walkthroughs with no code.
 
 ## Setup
 
 1. Node.js 18 or later.
-2. An Entra ID app registration with a client secret, added as Member or Admin of the workspace.
-3. In the Fabric admin portal, allow service principals to use Fabric/Power BI APIs.
-4. The workspace on a capacity (F, A or P SKU; a trial works for testing).
-5. `cp .env.example .env` and fill it in. `.env` is git-ignored Never commit secrets.
+2. A service principal with access to a workspace on a capacity. `04-service-principal`
+   has the checklist and a script to test it.
+3. `cp .env.example .env` and fill it in. `.env` is git-ignored. Never commit secrets.
 
 ```bash
 npm install
-npm run ep05
+npm run ep04   # check the setup
+npm run ep05   # http://localhost:3000
 ```
 
 ## Sample report
 
-The demos expect one report with a semantic model that has a `Region` RLS role
-(see `06-rls/README.md`). Any report works for 05.
+Any report works for most folders. `06-rls`, `14-scheduled-export` and the `?customer=`
+option in `16-edit-mode` expect a semantic model with an RLS role (default `Customer`,
+filter `[CustomerKey] = USERNAME()`) and data for `customer-a` and `customer-b`.
+See `06-rls/README.md`.
+
+## Shared code
+
+- `shared/powerbi.js`: `getAccessToken()`, `getReport()`, `generateEmbedToken()`,
+  `embedConfig()`, `exportReport()`
+- `shared/server.js`: a few lines of Express setup used by the later samples
 
 ---
 The production version of all of this (branding, roles, scheduling, writeback, capacity

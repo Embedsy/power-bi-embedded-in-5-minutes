@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>SDK tricks</title>
+  <style>
+    body { margin: 0; font-family: system-ui, sans-serif; background: #eef1f6; color: #1d1b2e; display: grid; grid-template-columns: 300px 1fr; height: 100vh; }
+    aside { padding: 16px; background: #fff; border-right: 1px solid #ddd; overflow: auto; font-size: 14px; }
+    h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .05em; margin: 20px 0 8px; color: #555; }
+    label { display: block; margin: 4px 0; }
+    input[type=text] { width: 100%; box-sizing: border-box; padding: 4px 6px; margin: 2px 0; }
+    button { margin: 4px 4px 0 0; padding: 4px 10px; }
+    #events { font: 12px ui-monospace, monospace; white-space: pre-wrap; background: #f6f6f8; padding: 8px; max-height: 180px; overflow: auto; }
+    #report { height: 100vh; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/powerbi-client@2/dist/powerbi.min.js"></script>
+</head>
+<body>
+  <aside>
+    <h2>1. Hide the chrome</h2>
+    <label><input type="checkbox" id="hideFilters"> Hide filter pane</label>
+    <label><input type="checkbox" id="hideNav"> Hide page navigation</label>
+
+    <h2>2. Transparent background</h2>
+    <label><input type="checkbox" id="transparent"> Use my app's background</label>
+
+    <h2>3. Filter from my own UI</h2>
+    <input type="text" id="table" placeholder="Table, e.g. Geography">
+    <input type="text" id="column" placeholder="Column, e.g. Region">
+    <input type="text" id="value" placeholder="Value, e.g. Europe">
+    <button id="apply">Apply</button><button id="clear">Clear</button>
+
+    <h2>4. Listen to clicks</h2>
+    <div id="events">Click a data point...</div>
+
+    <h2>5. Save and restore views</h2>
+    <button id="capture">Save view</button>
+    <div id="views"></div>
+  </aside>
+  <div id="report"></div>
+
+  <script>
+    const models = window['powerbi-client'].models;
+    const $ = (id) => document.getElementById(id);
+    let report;
+
+    (async () => {
+      const cfg = await (await fetch('/api/embed-config')).json();
+      if (cfg.error) { $('report').textContent = cfg.error; return; }
+      report = powerbi.embed($('report'), {
+        type: 'report',
+        id: cfg.reportId,
+        embedUrl: cfg.embedUrl,
+        accessToken: cfg.accessToken,
+        tokenType: models.TokenType.Embed,
+      });
+
+      // Trick 4: react to what the user clicks
+      report.on('dataSelected', (e) => {
+        const points = e.detail.dataPoints.map((p) =>
+          p.identity.map((i) => `${i.target.column} = ${i.equals}`).join(', '));
+        $('events').textContent =
+          `${e.detail.visual.title || e.detail.visual.name}\n${points.join('\n') || '(cleared)'}`;
+      });
+    })();
+
+    // Tricks 1 and 2: change settings on the live report, no reload
+    function applySettings() {
+      report.updateSettings({
+        panes: {
+          filters: { visible: !$('hideFilters').checked },
+          pageNavigation: { visible: !$('hideNav').checked },
+        },
+        background: $('transparent').checked ? models.BackgroundType.Transparent : models.BackgroundType.Default,
+      });
+    }
+    ['hideFilters', 'hideNav', 'transparent'].forEach((id) =>
+      $(id).addEventListener('change', applySettings));
+
+    // Trick 3: a report-level filter driven by your own controls
+    $('apply').onclick = () => report.setFilters([{
+      $schema: 'http://powerbi.com/product/schema#basic',
+      target: { table: $('table').value, column: $('column').value },
+      operator: 'In',
+      values: [$('value').value],
+      filterType: models.FilterType.Basic,
+    }]);
+    $('clear').onclick = () => report.setFilters([]);
+
+    // Trick 5: capture the current state and put it back later
+    $('capture').onclick = async () => {
+      const bookmark = await report.bookmarksManager.capture();
+      const button = document.createElement('button');
+      button.textContent = `View ${document.querySelectorAll('#views button').length + 1}`;
+      button.onclick = () => report.bookmarksManager.applyState(bookmark.state);
+      $('views').append(button);
+    };
+  </script>
+</body>
+</html>

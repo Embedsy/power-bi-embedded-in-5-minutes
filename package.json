@@ -4,10 +4,20 @@
   "private": true,
   "description": "Demo code for the Power BI Embedded in 5 Minutes YouTube series",
   "type": "module",
-  "engines": { "node": ">=18" },
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
+    "ep04": "node 04-service-principal/check.js",
     "ep05": "node 05-first-embed/server.js",
-    "ep06": "node 06-rls/server.js"
+    "ep06": "node 06-rls/server.js",
+    "ep08": "node 08-capacity/capacity.js",
+    "ep09": "node 09-sdk-tricks/server.js",
+    "ep10": "node 10-token-refresh/server.js",
+    "ep11": "node 11-export/server.js",
+    "ep13": "node 13-single-visual/server.js",
+    "ep14": "node 14-scheduled-export/export-job.js",
+    "ep16": "node 16-edit-mode/server.js"
   },
   "dependencies": {
     "@azure/msal-node": "^2.16.0",

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Edit mode</title>
+  <style>
+    body { margin: 0; font-family: system-ui, sans-serif; background: #f8f7fc; display: grid; grid-template-columns: 240px 1fr; height: 100vh; }
+    aside { padding: 16px; background: #2b2350; color: #fff; font-size: 14px; overflow: auto; }
+    h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .05em; margin: 18px 0 8px; color: #c8c4dc; }
+    aside button { display: block; width: 100%; margin: 4px 0; padding: 6px 10px; text-align: left; cursor: pointer; }
+    #status { font-size: 13px; color: #fbca15; margin-top: 12px; }
+    #report { height: 100vh; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/powerbi-client@2/dist/powerbi.min.js"></script>
+</head>
+<body>
+  <aside>
+    <h2>Mode</h2>
+    <button id="edit">Edit</button>
+    <button id="view">View</button>
+    <h2>Reports in workspace</h2>
+    <div id="reports"></div>
+    <div id="status"></div>
+  </aside>
+  <div id="report"></div>
+  <script>
+    const models = window['powerbi-client'].models;
+    const $ = (id) => document.getElementById(id);
+    const customer = new URLSearchParams(location.search).get('customer');
+    let report;
+
+    async function load(reportId) {
+      const params = new URLSearchParams();
+      if (reportId) params.set('reportId', reportId);
+      if (customer) params.set('customer', customer);
+      const cfg = await (await fetch('/api/embed-config?' + params)).json();
+      if (cfg.error) { $('status').textContent = cfg.error; return; }
+
+      powerbi.reset($('report'));
+      report = powerbi.embed($('report'), {
+        type: 'report',
+        id: cfg.reportId,
+        embedUrl: cfg.embedUrl,
+        accessToken: cfg.accessToken,
+        tokenType: models.TokenType.Embed,
+        permissions: models.Permissions.All,  // Read, ReadWrite, Copy, Create
+        viewMode: models.ViewMode.Edit,
+      });
+
+      // Fires after Save or Save As; saveAs is true for a new copy
+      report.on('saved', (e) => {
+        $('status').textContent = e.detail.saveAs ? `Saved as "${e.detail.reportName}"` : 'Saved';
+        listReports();
+      });
+      $('status').textContent = `Editing ${cfg.reportName}${customer ? ` as ${customer}` : ''}`;
+    }
+
+    async function listReports() {
+      const reports = await (await fetch('/api/reports')).json();
+      $('reports').innerHTML = '';
+      for (const r of reports) {
+        const b = document.createElement('button');
+        b.textContent = r.name;
+        b.onclick = () => load(r.id);
+        $('reports').append(b);
+      }
+    }
+
+    $('edit').onclick = () => report.switchMode('edit');
+    $('view').onclick = () => report.switchMode('view');
+
+    load();
+    listReports();
+  </script>
+</body>
+</html>

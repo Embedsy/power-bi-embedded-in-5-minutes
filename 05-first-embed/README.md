@@ -1,4 +1,4 @@
-# 05 - Your first embedded report
+# 05 - Your first embedded report in under 50 lines
 
 App owns data: a service principal gets an embed token on the server, and the page
 embeds the report with `powerbi-client`. The client secret never reaches the browser.

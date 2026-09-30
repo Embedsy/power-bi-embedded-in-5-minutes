@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Export to PDF and PowerPoint</title>
+  <style>
+    body { margin: 0; font-family: system-ui, sans-serif; background: #f8f7fc; }
+    header { display: flex; gap: 8px; align-items: center; padding: 8px 20px; background: #2b2350; color: #fff; }
+    button { padding: 6px 14px; font: inherit; cursor: pointer; }
+    #status { margin-left: 12px; font-size: 14px; }
+    #report { height: calc(100vh - 50px); }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/powerbi-client@2/dist/powerbi.min.js"></script>
+</head>
+<body>
+  <header>
+    <button data-format="PDF">Export PDF</button>
+    <button data-format="PPTX">Export PowerPoint</button>
+    <span id="status"></span>
+  </header>
+  <div id="report"></div>
+  <script>
+    const models = window['powerbi-client'].models;
+    const status = document.getElementById('status');
+    let report;
+
+    (async () => {
+      const cfg = await (await fetch('/api/embed-config')).json();
+      if (cfg.error) { status.textContent = cfg.error; return; }
+      report = powerbi.embed(document.getElementById('report'), {
+        type: 'report',
+        id: cfg.reportId,
+        embedUrl: cfg.embedUrl,
+        accessToken: cfg.accessToken,
+        tokenType: models.TokenType.Embed,
+      });
+    })();
+
+    document.querySelectorAll('button[data-format]').forEach((button) => {
+      button.onclick = async () => {
+        const format = button.dataset.format;
+        status.textContent = `Exporting ${format}...`;
+
+        // Capture exactly what the user is looking at
+        const { state } = await report.bookmarksManager.capture();
+
+        const res = await fetch('/api/export', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ format, state }),
+        });
+        if (!res.ok) { status.textContent = (await res.json()).error; return; }
+
+        const name = /filename="?([^"]+)"?/.exec(res.headers.get('Content-Disposition'))?.[1] || `report.${format.toLowerCase()}`;
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(await res.blob());
+        link.download = name;
+        link.click();
+        status.textContent = `Downloaded ${name}`;
+      };
+    });
+  </script>
+</body>
+</html>

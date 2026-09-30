@@ -1,4 +1,4 @@
-// Episode: Your first embedded report (app owns data).
+// Your first embedded report (app owns data).
 // The browser never sees the client secret. It asks this server for an embed token.
 import express from 'express';
 import { fileURLToPath } from 'node:url';
@@ -10,7 +10,7 @@ app.use(express.static(fileURLToPath(new URL('./public', import.meta.url))));
 app.get('/api/embed-config', async (_req, res) => {
   try {
     const report = await getReport();
-    const token = await generateEmbedToken({ report });
+    const token = await generateEmbedToken({ reports: [report] });
     res.json({
       reportId: report.id,
       embedUrl: report.embedUrl,
@@ -23,4 +23,4 @@ app.get('/api/embed-config', async (_req, res) => {
   }
 });
 
-app.listen(config.port, () => console.log(`Ep05 running on http://localhost:${config.port}`));
+app.listen(config.port, () => console.log(`Running on http://localhost:${config.port}`));

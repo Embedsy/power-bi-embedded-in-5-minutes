@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Single visuals</title>
+  <style>
+    body { margin: 0; font-family: system-ui, sans-serif; background: #eef1f6; color: #1d1b2e; display: grid; grid-template-columns: 280px 1fr; height: 100vh; }
+    aside { padding: 16px; background: #fff; border-right: 1px solid #ddd; overflow: auto; font-size: 14px; }
+    h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .05em; margin: 18px 0 8px; color: #555; }
+    label { display: block; margin: 4px 0; }
+    input[type=text] { width: 100%; box-sizing: border-box; padding: 4px 6px; margin: 2px 0; }
+    button { margin: 6px 4px 0 0; padding: 4px 10px; }
+    main { padding: 16px; overflow: auto; }
+    #full { height: calc(100vh - 32px); }
+    #grid { display: none; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 16px; }
+    .tile { height: 320px; background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/powerbi-client@2/dist/powerbi.min.js"></script>
+</head>
+<body>
+  <aside>
+    <h2>1. Find the visuals</h2>
+    <button id="list">List visuals on this page</button>
+    <div id="visuals"></div>
+
+    <h2>2. Embed them one by one</h2>
+    <button id="embed">Embed selected</button>
+    <button id="back">Full report</button>
+
+    <h2>3. Filter from my app</h2>
+    <input type="text" id="table" placeholder="Table, e.g. Geography">
+    <input type="text" id="column" placeholder="Column, e.g. Region">
+    <input type="text" id="value" placeholder="Value, e.g. Europe">
+    <button id="apply">Apply to all</button><button id="clear">Clear</button>
+  </aside>
+  <main>
+    <div id="full"></div>
+    <div id="grid"></div>
+  </main>
+
+  <script>
+    const models = window['powerbi-client'].models;
+    const $ = (id) => document.getElementById(id);
+    let cfg, report, pageName, embeddedVisuals = [];
+
+    (async () => {
+      cfg = await (await fetch('/api/embed-config')).json();
+      if (cfg.error) { $('full').textContent = cfg.error; return; }
+      report = powerbi.embed($('full'), {
+        type: 'report',
+        id: cfg.reportId,
+        embedUrl: cfg.embedUrl,
+        accessToken: cfg.accessToken,
+        tokenType: models.TokenType.Embed,
+      });
+    })();
+
+    // Step 1: page and visual names (the same as report.getPages() / page.getVisuals() in the console)
+    $('list').onclick = async () => {
+      const page = await report.getActivePage();
+      pageName = page.name;
+      const visuals = (await page.getVisuals()).filter((v) => v.title);
+      console.table(visuals.map((v) => ({ page: page.name, visualName: v.name, title: v.title, type: v.type })));
+      $('visuals').innerHTML = '';
+      for (const v of visuals) {
+        const label = document.createElement('label');
+        label.innerHTML = `<input type="checkbox" value="${v.name}"> ${v.title}`;
+        $('visuals').append(label);
+      }
+    };
+
+    // Step 2: type 'visual' plus pageName and visualName
+    $('embed').onclick = () => {
+      const names = [...document.querySelectorAll('#visuals input:checked')].map((i) => i.value);
+      if (!names.length) return;
+      $('full').style.display = 'none';
+      $('grid').style.display = 'grid';
+      $('grid').innerHTML = '';
+      embeddedVisuals = names.map((visualName) => {
+        const tile = document.createElement('div');
+        tile.className = 'tile';
+        $('grid').append(tile);
+        return powerbi.embed(tile, {
+          type: 'visual',
+          id: cfg.reportId,
+          embedUrl: cfg.embedUrl,
+          accessToken: cfg.accessToken,
+          tokenType: models.TokenType.Embed,
+          pageName,
+          visualName,
+        });
+      });
+    };
+
+    $('back').onclick = () => {
+      embeddedVisuals.forEach((v) => powerbi.reset(v.element));
+      embeddedVisuals = [];
+      $('grid').style.display = 'none';
+      $('full').style.display = 'block';
+    };
+
+    // Step 3: one filter from your own UI, applied to every embedded visual
+    function filterAll(filters) {
+      embeddedVisuals.forEach((v) => v.setFilters(filters));
+    }
+    $('apply').onclick = () => filterAll([{
+      $schema: 'http://powerbi.com/product/schema#basic',
+      target: { table: $('table').value, column: $('column').value },
+      operator: 'In',
+      values: [$('value').value],
+      filterType: models.FilterType.Basic,
+    }]);
+    $('clear').onclick = () => filterAll([]);
+  </script>
+</body>
+</html>

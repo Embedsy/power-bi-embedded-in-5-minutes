@@ -5,9 +5,10 @@ RLS role to that username before any data leaves the service.
 
 ## Report prerequisites
 
-- A role named `Region` in the semantic model, with a DAX filter such as
-  `[SalesRepEmail] = USERPRINCIPALNAME()`.
-- Rows in the data for `alice@contoso.com` and `bob@contoso.com` (or change `USERS` in `server.js`).
+- In Power BI Desktop, Manage roles: a role named `Customer` (or set `RLS_ROLE`) with a
+  DAX filter such as `[CustomerKey] = USERNAME()`.
+- Rows in the data for `customer-a` and `customer-b` (or change `CUSTOMERS` in `server.js`).
+- Test with View as role in Desktop, then publish.
 
 ```bash
 npm run ep06           # http://localhost:3000, switch "View as"
@@ -16,5 +17,5 @@ npm run ep06           # http://localhost:3000, switch "View as"
 ## Walkthrough
 
 1. `server.js`: the `identities` array (username, roles, datasets).
-2. Switch Alice / Bob: same report, different rows.
-3. In a real app the user comes from your own login on the server, never from the browser.
+2. Open two browser windows, Customer A and Customer B: same report, different numbers.
+3. In a real app the username comes from your own login on the server, never from the browser.

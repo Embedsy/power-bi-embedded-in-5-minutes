@@ -1,33 +1,31 @@
-// Episode: Row-level security with an effective identity.
+// Row-level security with an effective identity.
 // Same flow as 05, but the embed token carries a username + role,
 // so the semantic model filters rows before anything reaches the browser.
 import express from 'express';
 import { fileURLToPath } from 'node:url';
-import { config, getReport, generateEmbedToken } from '../shared/powerbi.js';
+import { config, env, getReport, generateEmbedToken } from '../shared/powerbi.js';
 
-// Demo "users". In a real app this comes from your own login, never from the browser.
-const USERS = {
-  alice: { username: 'alice@contoso.com', roles: ['Region'] },
-  bob: { username: 'bob@contoso.com', roles: ['Region'] },
-};
+// Demo customers. In a real app this comes from your own login, never from the browser.
+const CUSTOMERS = ['customer-a', 'customer-b'];
+const ROLE = env('RLS_ROLE', 'Customer');
 
 const app = express();
 app.use(express.static(fileURLToPath(new URL('./public', import.meta.url))));
 
 app.get('/api/embed-config', async (req, res) => {
-  const user = USERS[req.query.user];
-  if (!user) return res.status(400).json({ error: 'Unknown user' });
+  const username = req.query.customer;
+  if (!CUSTOMERS.includes(username)) return res.status(400).json({ error: 'Unknown customer' });
   try {
     const report = await getReport();
     const token = await generateEmbedToken({
-      report,
-      identities: [{ username: user.username, roles: user.roles, datasets: [report.datasetId] }],
+      reports: [report],
+      identities: [{ username, roles: [ROLE], datasets: [report.datasetId] }],
     });
     res.json({
       reportId: report.id,
       embedUrl: report.embedUrl,
       accessToken: token.token,
-      viewingAs: user.username,
+      viewingAs: username,
     });
   } catch (err) {
     console.error(err);
@@ -35,4 +33,4 @@ app.get('/api/embed-config', async (req, res) => {
   }
 });
 
-app.listen(config.port, () => console.log(`Ep06 running on http://localhost:${config.port}`));
+app.listen(config.port, () => console.log(`Running on http://localhost:${config.port}`));

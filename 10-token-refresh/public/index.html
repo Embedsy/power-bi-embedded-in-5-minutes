@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Token refresh</title>
+  <style>
+    body { margin: 0; font-family: system-ui, sans-serif; background: #f8f7fc; }
+    header { display: flex; justify-content: space-between; padding: 12px 20px; background: #2b2350; color: #fff; font-size: 14px; }
+    #report { height: calc(100vh - 44px); }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/powerbi-client@2/dist/powerbi.min.js"></script>
+</head>
+<body>
+  <header><span id="mode"></span><span id="clock"></span></header>
+  <div id="report"></div>
+  <script>
+    const models = window['powerbi-client'].models;
+    // Open with ?refresh=off to see the report fail when the token expires.
+    const refreshOn = new URLSearchParams(location.search).get('refresh') !== 'off';
+    const REFRESH_BEFORE_MS = 2 * 60 * 1000;
+    let report, expiration, timer;
+
+    async function getConfig() {
+      const cfg = await (await fetch('/api/embed-config')).json();
+      if (cfg.error) throw new Error(cfg.error);
+      expiration = Date.parse(cfg.expiration);
+      return cfg;
+    }
+
+    // The fix: get a new token a few minutes early and swap it in. No reload, state stays.
+    function scheduleRefresh() {
+      clearTimeout(timer);
+      const wait = Math.max(expiration - Date.now() - REFRESH_BEFORE_MS, 10000);
+      timer = setTimeout(refreshToken, wait);
+    }
+
+    async function refreshToken() {
+      const cfg = await getConfig();
+      await report.setAccessToken(cfg.accessToken);
+      console.log('Token refreshed, new expiry', cfg.expiration);
+      scheduleRefresh();
+    }
+
+    // A laptop that slept past the timer: check again when the tab comes back.
+    document.addEventListener('visibilitychange', () => {
+      if (refreshOn && document.visibilityState === 'visible' && expiration - Date.now() < REFRESH_BEFORE_MS) {
+        refreshToken();
+      }
+    });
+
+    (async () => {
+      const cfg = await getConfig();
+      report = powerbi.embed(document.getElementById('report'), {
+        type: 'report',
+        id: cfg.reportId,
+        embedUrl: cfg.embedUrl,
+        accessToken: cfg.accessToken,
+        tokenType: models.TokenType.Embed,
+      });
+      report.on('error', (e) => console.error('Report error', e.detail));
+      if (refreshOn) scheduleRefresh();
+    })();
+
+    document.getElementById('mode').textContent = refreshOn ? 'Auto refresh ON' : 'Auto refresh OFF';
+    setInterval(() => {
+      if (!expiration) return;
+      const s = Math.round((expiration - Date.now()) / 1000);
+      document.getElementById('clock').textContent =
+        s > 0 ? `Token expires in ${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}` : 'Token expired';
+    }, 1000);
+  </script>
+</body>
+</html>
