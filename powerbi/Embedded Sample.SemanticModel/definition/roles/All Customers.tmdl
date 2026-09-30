@@ -1,0 +1,4 @@
+/// No filter. With RLS on the model, a service principal must always pass an identity;
+/// samples that are not about RLS use this role to see everything.
+role 'All Customers'
+	modelPermission: read

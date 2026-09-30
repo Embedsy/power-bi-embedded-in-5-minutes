@@ -23,7 +23,8 @@ The other videos in the series are concepts and portal walkthroughs with no code
 1. Node.js 18 or later.
 2. A service principal with access to a workspace on a capacity. `04-service-principal`
    has the checklist and a script to test it.
-3. `cp .env.example .env` and fill it in. `.env` is git-ignored. Never commit secrets.
+3. The sample report from `powerbi/` published to that workspace.
+4. `cp .env.example .env` and fill it in. `.env` is git-ignored. Never commit secrets.
 
 ```bash
 npm install
@@ -33,10 +34,10 @@ npm run ep05   # http://localhost:3000
 
 ## Sample report
 
-Any report works for most folders. `06-rls`, `14-scheduled-export` and the `?customer=`
-option in `16-edit-mode` expect a semantic model with an RLS role (default `Customer`,
-filter `[CustomerKey] = USERNAME()`) and data for `customer-a` and `customer-b`.
-See `06-rls/README.md`.
+`powerbi/Embedded Sample.pbip` is the report used in the videos: customers, products
+and monthly sales, with an RLS role `Customer` for `customer-a` to `customer-f`.
+No data source to connect. Open it in Power BI Desktop, refresh and publish.
+See `powerbi/README.md`.
 
 ## Shared code
 

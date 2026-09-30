@@ -1,0 +1,5 @@
+/// Embed tokens pass the customer key as the username, e.g. customer-a
+role Customer
+	modelPermission: read
+
+	tablePermission Customers = [CustomerKey] = USERNAME()

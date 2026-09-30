@@ -1,0 +1,78 @@
+table Calendar
+	lineageTag: 8ff922bb-cd8a-d41c-dfc4-8d3c5163b2ab
+	dataCategory: Time
+
+	column Date
+		dataType: dateTime
+		isKey
+		formatString: Short Date
+		lineageTag: a3d7a74c-8321-8426-88c2-34ed34aedd71
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: 56bbdedf-609b-4251-1e38-8169f7ccc9e5
+		summarizeBy: none
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Number'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 37d09174-d757-e8df-4ae1-247bab819635
+		summarizeBy: none
+		sourceColumn: Month Number
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month
+		dataType: string
+		lineageTag: 5042edfe-bc36-85c3-30bc-5df24c516a54
+		summarizeBy: none
+		sourceColumn: Month
+		sortByColumn: 'Month Number'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Year Month Key'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 8a772927-16df-f845-c84a-7c2576acb895
+		summarizeBy: none
+		sourceColumn: Year Month Key
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Year Month'
+		dataType: string
+		lineageTag: cbfffde6-1904-ebfb-402a-19941fdb24c1
+		summarizeBy: none
+		sourceColumn: Year Month
+		sortByColumn: 'Year Month Key'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Calendar = m
+		mode: import
+		source =
+				let
+				    Dates = List.Dates(#date(2025, 1, 1), 730, #duration(1, 0, 0, 0)),
+				    Base = #table(type table [Date = date], List.Transform(Dates, each {_})),
+				    Year = Table.AddColumn(Base, "Year", each Date.Year([Date]), Int64.Type),
+				    MonthNumber = Table.AddColumn(Year, "Month Number", each Date.Month([Date]), Int64.Type),
+				    Month = Table.AddColumn(MonthNumber, "Month", each Date.ToText([Date], "MMM", "en-US"), type text),
+				    YearMonthKey = Table.AddColumn(Month, "Year Month Key", each [Year] * 100 + [Month Number], Int64.Type),
+				    YearMonth = Table.AddColumn(YearMonthKey, "Year Month", each Date.ToText([Date], "MMM yyyy", "en-US"), type text)
+				in
+				    YearMonth
+
+	annotation PBI_ResultType = Table

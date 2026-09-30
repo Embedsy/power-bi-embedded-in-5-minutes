@@ -1,0 +1,56 @@
+/// CustomerKey is the username passed in the embed token for row-level security
+table Customers
+	lineageTag: e6d0e1c8-fc6a-4fcf-4786-9df87e04cd88
+
+	column CustomerKey
+		dataType: string
+		isKey
+		lineageTag: 0b4a8278-c5c6-76a4-1cde-f4df1298427f
+		summarizeBy: none
+		sourceColumn: CustomerKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column Customer
+		dataType: string
+		lineageTag: 97a1a16e-738e-8fb9-7fd0-8ed4da3a4999
+		summarizeBy: none
+		sourceColumn: Customer
+
+		annotation SummarizationSetBy = Automatic
+
+	column Region
+		dataType: string
+		lineageTag: 052bef2c-4cfa-305c-ec7a-75d1ad491f23
+		summarizeBy: none
+		sourceColumn: Region
+
+		annotation SummarizationSetBy = Automatic
+
+	column Industry
+		dataType: string
+		lineageTag: 0f07bc88-121e-7b70-9d60-85a9245e5ca1
+		summarizeBy: none
+		sourceColumn: Industry
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Customers = m
+		mode: import
+		source =
+				let
+				    Source = #table(
+				        type table [CustomerKey = text, Customer = text, Region = text, Industry = text],
+				        {
+				        {"customer-a", "Alpine Retail", "Europe", "Retail"},
+				        {"customer-b", "Bayside Foods", "North America", "Food"},
+				        {"customer-c", "Cedar Logistics", "Europe", "Logistics"},
+				        {"customer-d", "Delta Clinics", "Asia Pacific", "Healthcare"},
+				        {"customer-e", "Evergreen Hotels", "North America", "Hospitality"},
+				        {"customer-f", "Fjord Energy", "Europe", "Energy"}
+				        }
+				    )
+				in
+				    Source
+
+	annotation PBI_ResultType = Table

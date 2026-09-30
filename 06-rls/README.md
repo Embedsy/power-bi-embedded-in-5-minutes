@@ -3,12 +3,12 @@
 Same flow as 05, plus an `identities` entry on the embed token. Power BI applies the
 RLS role to that username before any data leaves the service.
 
-## Report prerequisites
+## Report
 
-- In Power BI Desktop, Manage roles: a role named `Customer` (or set `RLS_ROLE`) with a
-  DAX filter such as `[CustomerKey] = USERNAME()`.
-- Rows in the data for `customer-a` and `customer-b` (or change `CUSTOMERS` in `server.js`).
-- Test with View as role in Desktop, then publish.
+The sample report in `powerbi/` already has the role: `Customer`, with
+`[CustomerKey] = USERNAME()` on the Customers table. To build it yourself in
+Power BI Desktop: Modeling > Manage roles, add the role and filter, test with
+View as, publish.
 
 ```bash
 npm run ep06           # http://localhost:3000, switch "View as"

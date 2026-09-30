@@ -64,6 +64,14 @@ export async function listReports(workspaceId = config.workspaceId) {
   return (await pbi(`/groups/${workspaceId}/reports`)).value;
 }
 
+// A semantic model with RLS always needs an identity when a service principal asks for
+// a token. Samples that aren't about RLS use this one (see DEFAULT_ROLE in .env.example).
+function defaultIdentities(datasetIds) {
+  const role = process.env.DEFAULT_ROLE;
+  if (!role) return undefined;
+  return [{ username: process.env.DEFAULT_USERNAME || 'demo', roles: [role], datasets: datasetIds }];
+}
+
 // Embed token via the multi-resource GenerateToken API.
 //   identities        RLS effective identities (see 06-rls)
 //   lifetimeInMinutes shorter tokens, handy for testing refresh (see 10-token-refresh)
@@ -83,7 +91,8 @@ export function generateEmbedToken({
     datasets: datasetIds.map((id) => ({ id })),
   };
   if (allowSaveAs) body.targetWorkspaces = [{ id: workspaceId }];
-  if (identities) body.identities = identities;
+  const effective = identities || defaultIdentities(datasetIds);
+  if (effective) body.identities = effective;
   if (lifetimeInMinutes) body.lifetimeInMinutes = lifetimeInMinutes;
   return pbi('/GenerateToken', { method: 'POST', body: JSON.stringify(body) });
 }
@@ -118,10 +127,9 @@ export async function exportReport({
   const base = `/groups/${workspaceId}/reports/${reportId}`;
   const body = { format, powerBIReportConfiguration: {} };
   if (state) body.powerBIReportConfiguration.defaultBookmark = { state };
-  if (identity) {
-    const { datasetId } = await getReport(reportId, workspaceId);
-    body.powerBIReportConfiguration.identities = [{ ...identity, datasets: [datasetId] }];
-  }
+  const { datasetId } = await getReport(reportId, workspaceId);
+  const identities = identity ? [{ ...identity, datasets: [datasetId] }] : defaultIdentities([datasetId]);
+  if (identities) body.powerBIReportConfiguration.identities = identities;
 
   let job = await pbi(`${base}/ExportTo`, { method: 'POST', body: JSON.stringify(body) });
   while (job.status === 'NotStarted' || job.status === 'Running') {

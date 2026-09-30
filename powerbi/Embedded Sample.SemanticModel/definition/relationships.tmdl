@@ -1,0 +1,11 @@
+relationship 72d00920-d0ff-9dfe-14de-1e1086a7420a
+	fromColumn: Sales.Date
+	toColumn: Calendar.Date
+
+relationship c491badc-c71d-be16-a803-630c0fe8c399
+	fromColumn: Sales.CustomerKey
+	toColumn: Customers.CustomerKey
+
+relationship 197aeee3-6a11-0958-e77d-79d038d1f541
+	fromColumn: Sales.ProductKey
+	toColumn: Products.ProductKey
