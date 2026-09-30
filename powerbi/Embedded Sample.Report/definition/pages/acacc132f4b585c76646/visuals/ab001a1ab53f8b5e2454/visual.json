@@ -3,11 +3,11 @@
   "name": "ab001a1ab53f8b5e2454",
   "position": {
     "x": 24,
-    "y": 100,
-    "z": 2000,
-    "height": 120,
-    "width": 400,
-    "tabOrder": 2000
+    "y": 88,
+    "height": 92,
+    "width": 296,
+    "z": 3000,
+    "tabOrder": 3000
   },
   "visual": {
     "visualType": "card",
@@ -48,6 +48,19 @@
               "expr": {
                 "Literal": {
                   "Value": "'Revenue'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Revenue, total for the current filters'"
                 }
               }
             }

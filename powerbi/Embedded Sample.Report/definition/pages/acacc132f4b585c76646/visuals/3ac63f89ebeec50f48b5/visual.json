@@ -3,11 +3,11 @@
   "name": "3ac63f89ebeec50f48b5",
   "position": {
     "x": 24,
-    "y": 236,
-    "z": 5000,
-    "height": 460,
-    "width": 780,
-    "tabOrder": 5000
+    "y": 196,
+    "height": 488,
+    "width": 812,
+    "z": 7000,
+    "tabOrder": 7000
   },
   "visual": {
     "visualType": "columnChart",
@@ -68,6 +68,41 @@
         ]
       }
     },
+    "objects": {
+      "labels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "valueAxis": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "gridlineShow": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
     "visualContainerObjects": {
       "title": [
         {
@@ -83,6 +118,19 @@
               "expr": {
                 "Literal": {
                   "Value": "'Revenue by month'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Column chart of revenue per month'"
                 }
               }
             }

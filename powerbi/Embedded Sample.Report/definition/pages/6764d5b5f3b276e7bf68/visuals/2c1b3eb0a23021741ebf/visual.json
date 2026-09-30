@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
-  "name": "f456fcc1ba3cdd220562",
+  "name": "2c1b3eb0a23021741ebf",
   "position": {
-    "x": 1060,
+    "x": 852,
     "y": 6,
     "height": 52,
     "width": 196,
-    "z": 2000,
-    "tabOrder": 2000
+    "z": 1000,
+    "tabOrder": 1000
   },
   "visual": {
     "visualType": "slicer",
@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Calendar"
+                      "Entity": "Customers"
                     }
                   },
-                  "Property": "Year"
+                  "Property": "Region"
                 }
               },
-              "queryRef": "Calendar.Year",
-              "nativeQueryRef": "Year"
+              "queryRef": "Customers.Region",
+              "nativeQueryRef": "Region"
             }
           ]
         }
@@ -68,7 +68,7 @@
             "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Year filter'"
+                  "Value": "'Region filter'"
                 }
               }
             }

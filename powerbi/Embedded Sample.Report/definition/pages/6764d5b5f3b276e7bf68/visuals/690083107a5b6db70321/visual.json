@@ -3,11 +3,11 @@
   "name": "690083107a5b6db70321",
   "position": {
     "x": 24,
-    "y": 356,
-    "z": 2000,
-    "height": 340,
+    "y": 400,
+    "height": 284,
     "width": 1232,
-    "tabOrder": 2000
+    "z": 5000,
+    "tabOrder": 5000
   },
   "visual": {
     "visualType": "lineChart",
@@ -68,6 +68,45 @@
         ]
       }
     },
+    "objects": {
+      "dataPoint": [
+        {
+          "properties": {
+            "fill": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#5F6166'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "lineStyles": [
+        {
+          "properties": {
+            "strokeWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "2L"
+                }
+              }
+            },
+            "showMarker": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
     "visualContainerObjects": {
       "title": [
         {
@@ -82,7 +121,20 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Units by month'"
+                  "Value": "'Units sold by month'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Line chart of units sold per month'"
                 }
               }
             }

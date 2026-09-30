@@ -1,3 +1,4 @@
+/// Product catalogue with list prices
 table Products
 	lineageTag: 068f80c7-519d-0528-fb08-e82137a72131
 

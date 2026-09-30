@@ -1,25 +1,26 @@
+/// One row per customer, product and month
 table Sales
 	lineageTag: 11ff9f68-afb6-b8b5-b8ed-a218d7c83a65
 
+	/// Quantity times list price
 	measure 'Revenue' = SUM(Sales[Amount])
 		formatString: #,0
 		lineageTag: d425b8d8-c74e-9365-3c0d-dacafc2c57c3
 
+	/// Number of units sold
 	measure 'Units' = SUM(Sales[Quantity])
 		formatString: #,0
 		lineageTag: a24e01d0-da7f-f363-875c-7c93efb6acd7
 
+	/// Customers with at least one sale
 	measure 'Active Customers' = DISTINCTCOUNT(Sales[CustomerKey])
 		formatString: #,0
 		lineageTag: a4a63bb1-177c-1547-b281-3603e0cceef6
 
-	measure 'Revenue LY' = CALCULATE([Revenue], SAMEPERIODLASTYEAR('Calendar'[Date]))
+	/// Average revenue per active customer
+	measure 'Revenue per Customer' = DIVIDE([Revenue], [Active Customers])
 		formatString: #,0
-		lineageTag: 5fc71d8b-1dde-e675-e862-49a21a56a57b
-
-	measure 'Revenue vs LY' = DIVIDE([Revenue] - [Revenue LY], [Revenue LY])
-		formatString: 0.0%;-0.0%;0.0%
-		lineageTag: d2ad01ff-2fc6-a3ae-3015-5269504fe9eb
+		lineageTag: dd78382c-1945-b05f-e1da-f8332e095559
 
 	column Date
 		dataType: dateTime

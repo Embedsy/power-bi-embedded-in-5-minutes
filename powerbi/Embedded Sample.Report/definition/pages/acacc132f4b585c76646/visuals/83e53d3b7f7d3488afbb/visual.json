@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
   "name": "83e53d3b7f7d3488afbb",
   "position": {
-    "x": 820,
-    "y": 236,
-    "z": 6000,
-    "height": 460,
-    "width": 436,
-    "tabOrder": 6000
+    "x": 852,
+    "y": 196,
+    "height": 488,
+    "width": 404,
+    "z": 8000,
+    "tabOrder": 8000
   },
   "visual": {
     "visualType": "tableEx",
@@ -107,6 +107,19 @@
               "expr": {
                 "Literal": {
                   "Value": "'Revenue by customer'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Table of revenue and units per customer'"
                 }
               }
             }

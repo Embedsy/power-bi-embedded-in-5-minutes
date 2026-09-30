@@ -1,9 +1,11 @@
-/// CustomerKey is the username passed in the embed token for row-level security
+/// Customers with region and industry, filtered per customer by the Customer RLS role
 table Customers
 	lineageTag: e6d0e1c8-fc6a-4fcf-4786-9df87e04cd88
 
+	/// Username in the embed token, matched by the Customer RLS role
 	column CustomerKey
 		dataType: string
+		isHidden
 		isKey
 		lineageTag: 0b4a8278-c5c6-76a4-1cde-f4df1298427f
 		summarizeBy: none

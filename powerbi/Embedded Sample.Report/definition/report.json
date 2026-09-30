@@ -7,7 +7,7 @@
       "type": "SharedResources"
     },
     "customTheme": {
-      "name": "EmbeddedSample.json",
+      "name": "Embedsy.json",
       "reportVersionAtImport": "5.61",
       "type": "RegisteredResources"
     }
@@ -30,15 +30,26 @@
       "type": "RegisteredResources",
       "items": [
         {
-          "name": "EmbeddedSample.json",
-          "path": "EmbeddedSample.json",
+          "name": "Embedsy.json",
+          "path": "Embedsy.json",
           "type": "CustomTheme"
+        },
+        {
+          "name": "BackgroundOverview.png",
+          "path": "BackgroundOverview.png",
+          "type": "Image"
+        },
+        {
+          "name": "BackgroundProducts.png",
+          "path": "BackgroundProducts.png",
+          "type": "Image"
         }
       ]
     }
   ],
   "settings": {
     "useStylableVisualContainerHeader": true,
+    "exportDataMode": "AllowSummarized",
     "defaultFilterActionIsDataFilter": true,
     "defaultDrillFilterOtherVisuals": true,
     "allowChangeFilterTypes": true,

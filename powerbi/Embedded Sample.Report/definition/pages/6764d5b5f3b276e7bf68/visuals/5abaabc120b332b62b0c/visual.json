@@ -3,11 +3,11 @@
   "name": "5abaabc120b332b62b0c",
   "position": {
     "x": 24,
-    "y": 20,
-    "z": 0,
-    "height": 320,
-    "width": 600,
-    "tabOrder": 0
+    "y": 84,
+    "height": 300,
+    "width": 400,
+    "z": 3000,
+    "tabOrder": 3000
   },
   "visual": {
     "visualType": "clusteredBarChart",
@@ -68,6 +68,41 @@
         ]
       }
     },
+    "objects": {
+      "labels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "valueAxis": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "gridlineShow": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
     "visualContainerObjects": {
       "title": [
         {
@@ -83,6 +118,19 @@
               "expr": {
                 "Literal": {
                   "Value": "'Revenue by category'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Bar chart of revenue per product category'"
                 }
               }
             }

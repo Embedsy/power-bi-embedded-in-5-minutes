@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
   "name": "a0a503787039791c05a4",
   "position": {
-    "x": 24,
-    "y": 20,
-    "z": 0,
-    "height": 64,
-    "width": 300,
-    "tabOrder": 0
+    "x": 852,
+    "y": 6,
+    "height": 52,
+    "width": 196,
+    "z": 1000,
+    "tabOrder": 1000
   },
   "visual": {
     "visualType": "slicer",
@@ -55,14 +55,20 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
-            },
-            "text": {
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Region'"
+                  "Value": "'Region filter'"
                 }
               }
             }
