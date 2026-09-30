@@ -28,9 +28,7 @@
         embedUrl: cfg.embedUrl,
         accessToken: cfg.accessToken,
         tokenType: window['powerbi-client'].models.TokenType.Embed,
-        settings: { panes: { filters: { visible: false } } },
       });
-      report.on('loaded', () => console.log('Report loaded'));
       report.on('error', (e) => console.error(e.detail));
     })();
   </script>
