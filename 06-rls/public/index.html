@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Row-level security</title>
+  <style>
+    body { margin: 0; font-family: system-ui, sans-serif; background: #f8f7fc; }
+    header { display: flex; gap: 12px; align-items: center; padding: 10px 20px; background: #2b2350; color: #fff; }
+    select { font: inherit; padding: 4px 8px; }
+    #report { height: calc(100vh - 52px); }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/powerbi-client@2/dist/powerbi.min.js"></script>
+</head>
+<body>
+  <header>
+    <span>View as</span>
+    <select id="user">
+      <option value="alice">Alice</option>
+      <option value="bob">Bob</option>
+    </select>
+    <span id="who"></span>
+  </header>
+  <div id="report"></div>
+  <script>
+    const container = document.getElementById('report');
+    async function load(user) {
+      const res = await fetch('/api/embed-config?user=' + encodeURIComponent(user));
+      const cfg = await res.json();
+      if (!res.ok) { document.getElementById('who').textContent = cfg.error; return; }
+      document.getElementById('who').textContent = 'Token issued for ' + cfg.viewingAs;
+      powerbi.reset(container);
+      powerbi.embed(container, {
+        type: 'report',
+        id: cfg.reportId,
+        embedUrl: cfg.embedUrl,
+        accessToken: cfg.accessToken,
+        tokenType: window['powerbi-client'].models.TokenType.Embed,
+      });
+    }
+    const select = document.getElementById('user');
+    select.addEventListener('change', () => load(select.value));
+    load(select.value);
+  </script>
+</body>
+</html>

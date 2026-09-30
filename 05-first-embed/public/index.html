@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>First embedded report</title>
+  <style>
+    body { margin: 0; font-family: system-ui, sans-serif; background: #f8f7fc; }
+    header { padding: 12px 20px; background: #2b2350; color: #fff; }
+    #report { height: calc(100vh - 48px); }
+    #status { padding: 20px; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/powerbi-client@2/dist/powerbi.min.js"></script>
+</head>
+<body>
+  <header>First embedded report</header>
+  <div id="status">Loading...</div>
+  <div id="report"></div>
+  <script>
+    (async () => {
+      const res = await fetch('/api/embed-config');
+      const cfg = await res.json();
+      if (!res.ok) { document.getElementById('status').textContent = cfg.error; return; }
+      document.getElementById('status').remove();
+
+      const report = powerbi.embed(document.getElementById('report'), {
+        type: 'report',
+        id: cfg.reportId,
+        embedUrl: cfg.embedUrl,
+        accessToken: cfg.accessToken,
+        tokenType: window['powerbi-client'].models.TokenType.Embed,
+        settings: { panes: { filters: { visible: false } } },
+      });
+      report.on('loaded', () => console.log('Report loaded'));
+      report.on('error', (e) => console.error(e.detail));
+    })();
+  </script>
+</body>
+</html>
