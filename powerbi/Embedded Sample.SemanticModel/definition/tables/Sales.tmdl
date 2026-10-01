@@ -3,12 +3,12 @@ table Sales
 	lineageTag: 11ff9f68-afb6-b8b5-b8ed-a218d7c83a65
 
 	/// Quantity times list price
-	measure 'Revenue' = SUM(Sales[Amount])
+	measure Revenue = SUM(Sales[Amount])
 		formatString: #,0
 		lineageTag: d425b8d8-c74e-9365-3c0d-dacafc2c57c3
 
 	/// Number of units sold
-	measure 'Units' = SUM(Sales[Quantity])
+	measure Units = SUM(Sales[Quantity])
 		formatString: #,0
 		lineageTag: a24e01d0-da7f-f363-875c-7c93efb6acd7
 
@@ -106,3 +106,4 @@ table Sales
 				    Source
 
 	annotation PBI_ResultType = Table
+

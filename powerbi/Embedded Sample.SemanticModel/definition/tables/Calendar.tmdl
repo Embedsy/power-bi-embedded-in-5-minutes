@@ -77,3 +77,4 @@ table Calendar
 				    YearMonth
 
 	annotation PBI_ResultType = Table
+
