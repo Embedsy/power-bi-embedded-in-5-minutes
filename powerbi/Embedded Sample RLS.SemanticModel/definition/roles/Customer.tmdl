@@ -1,8 +1,9 @@
-/// Embed tokens pass the customer key as the username, e.g. customer-a
+/// Embed tokens pass the customer key as the username, e.g. customer-a.
+/// A real user in the Power BI service matches on their email instead.
 role Customer
 	modelPermission: read
 
-	tablePermission Customers = [CustomerKey] = USERNAME()
+	tablePermission Customers = [CustomerKey] = USERNAME() || [UserEmail] = USERNAME()
 
 	annotation PBI_Id = ff17e2d1958c4ddbaa117b490fa5aa46
 

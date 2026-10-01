@@ -7,7 +7,7 @@ The report used in every demo, in two versions:
 | `Embedded Sample.pbip` | none | 01 to 05, 09 to 13 | `REPORT_ID` |
 | `Embedded Sample RLS.pbip` | roles `Customer` and `All Customers` | 06, 12, 14, 16 | `RLS_REPORT_ID` |
 
-They're identical apart from the roles, so the early videos don't have to deal with RLS.
+They're identical apart from the roles (and the `UserEmail` column they use), so the early videos don't have to deal with RLS.
 Both are Power BI projects (PBIP): the model and report are plain text and diff nicely
 in Git. If you change the layout or the model, change both.
 
@@ -28,8 +28,11 @@ measure has a description; keys are hidden; the date table is marked.
 
 RLS version only:
 
-- **Role `Customer`:** `[CustomerKey] = USERNAME()` on Customers. The embed token
-  passes the customer key as the username, so `customer-a` only sees Alpine Retail.
+- **Role `Customer`:** `[CustomerKey] = USERNAME() || [UserEmail] = USERNAME()` on
+  Customers. The embed token passes the customer key as the username, so `customer-a`
+  only sees Alpine Retail. The hidden `UserEmail` column maps a real user to a customer
+  (Alpine Retail: `vlad@embedsy.io`), because "Test as role" in the Power BI service
+  only accepts real users. Put a user from your own tenant there.
 - **Role `All Customers`:** no filter. Once a model has RLS, a service principal has
   to pass an identity for every embed token, including for users who may see
   everything. `16-edit-mode` uses it for the admin view.

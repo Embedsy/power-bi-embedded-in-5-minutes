@@ -13,6 +13,17 @@ table Customers
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Email of a real user for this customer. Lets "Test as role" in the Power BI
+	/// service, which only accepts real users, show the Customer role working.
+	column UserEmail
+		dataType: string
+		isHidden
+		lineageTag: 8127885c-3f42-4edd-8070-f76ff9fccd0c
+		summarizeBy: none
+		sourceColumn: UserEmail
+
+		annotation SummarizationSetBy = Automatic
+
 	column Customer
 		dataType: string
 		lineageTag: 97a1a16e-738e-8fb9-7fd0-8ed4da3a4999
@@ -42,14 +53,14 @@ table Customers
 		source =
 				let
 				    Source = #table(
-				        type table [CustomerKey = text, Customer = text, Region = text, Industry = text],
+				        type table [CustomerKey = text, UserEmail = nullable text, Customer = text, Region = text, Industry = text],
 				        {
-				        {"customer-a", "Alpine Retail", "Europe", "Retail"},
-				        {"customer-b", "Bayside Foods", "North America", "Food"},
-				        {"customer-c", "Cedar Logistics", "Europe", "Logistics"},
-				        {"customer-d", "Delta Clinics", "Asia Pacific", "Healthcare"},
-				        {"customer-e", "Evergreen Hotels", "North America", "Hospitality"},
-				        {"customer-f", "Fjord Energy", "Europe", "Energy"}
+				        {"customer-a", "vlad@embedsy.io", "Alpine Retail", "Europe", "Retail"},
+				        {"customer-b", null, "Bayside Foods", "North America", "Food"},
+				        {"customer-c", null, "Cedar Logistics", "Europe", "Logistics"},
+				        {"customer-d", null, "Delta Clinics", "Asia Pacific", "Healthcare"},
+				        {"customer-e", null, "Evergreen Hotels", "North America", "Hospitality"},
+				        {"customer-f", null, "Fjord Energy", "Europe", "Energy"}
 				        }
 				    )
 				in
