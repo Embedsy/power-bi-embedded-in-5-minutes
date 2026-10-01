@@ -9,4 +9,3 @@ relationship c491badc-c71d-be16-a803-630c0fe8c399
 relationship 197aeee3-6a11-0958-e77d-79d038d1f541
 	fromColumn: Sales.ProductKey
 	toColumn: Products.ProductKey
-

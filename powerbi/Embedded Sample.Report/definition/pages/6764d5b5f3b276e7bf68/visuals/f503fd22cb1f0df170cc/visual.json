@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
   "name": "f503fd22cb1f0df170cc",
   "position": {
-    "x": 1060.1656324252,
-    "y": 0,
+    "x": 1060,
+    "y": 8,
+    "height": 66,
+    "width": 196,
     "z": 2000,
-    "height": 52.913792705714094,
-    "width": 196.53694433550947,
     "tabOrder": 2000
   },
   "visual": {
@@ -27,8 +27,7 @@
                 }
               },
               "queryRef": "Calendar.Year",
-              "nativeQueryRef": "Year",
-              "active": true
+              "nativeQueryRef": "Year"
             }
           ]
         }
@@ -75,26 +74,42 @@
             }
           }
         }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
+              "expr": {
+                "Literal": {
+                  "Value": "4D"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "4D"
+                }
+              }
+            },
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            },
+            "right": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            }
+          }
+        }
       ]
     },
     "drillFilterOtherVisuals": true
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "2457605b77e116026d92",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "Calendar"
-              }
-            },
-            "Property": "Year"
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
   }
 }

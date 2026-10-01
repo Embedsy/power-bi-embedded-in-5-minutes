@@ -11,8 +11,6 @@ annotation __PBI_TimeIntelligenceEnabled = 0
 
 annotation PBI_QueryOrder = ["Calendar","Customers","Products","Sales"]
 
-annotation PBI_ProTooling = ["DevMode"]
-
 ref table Calendar
 ref table Customers
 ref table Products
@@ -20,4 +18,3 @@ ref table Sales
 
 ref role Customer
 ref role 'All Customers'
-

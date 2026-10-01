@@ -3,6 +3,3 @@ role Customer
 	modelPermission: read
 
 	tablePermission Customers = [CustomerKey] = USERNAME()
-
-	annotation PBI_Id = ff17e2d1958c4ddbaa117b490fa5aa46
-

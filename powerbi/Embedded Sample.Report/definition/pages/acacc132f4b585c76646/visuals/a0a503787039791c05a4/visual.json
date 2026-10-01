@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
   "name": "a0a503787039791c05a4",
   "position": {
     "x": 852,
-    "y": 6,
-    "z": 1000,
-    "height": 52,
+    "y": 8,
+    "height": 66,
     "width": 196,
+    "z": 1000,
     "tabOrder": 1000
   },
   "visual": {
@@ -27,8 +27,7 @@
                 }
               },
               "queryRef": "Customers.Region",
-              "nativeQueryRef": "Region",
-              "active": true
+              "nativeQueryRef": "Region"
             }
           ]
         }
@@ -70,6 +69,40 @@
               "expr": {
                 "Literal": {
                   "Value": "'Region filter'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
+              "expr": {
+                "Literal": {
+                  "Value": "4D"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "4D"
+                }
+              }
+            },
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            },
+            "right": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
                 }
               }
             }

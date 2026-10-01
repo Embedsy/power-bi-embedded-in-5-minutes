@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
   "name": "f456fcc1ba3cdd220562",
   "position": {
     "x": 1060,
-    "y": 6,
-    "z": 2000,
-    "height": 52,
+    "y": 8,
+    "height": 66,
     "width": 196,
+    "z": 2000,
     "tabOrder": 2000
   },
   "visual": {
@@ -27,8 +27,7 @@
                 }
               },
               "queryRef": "Calendar.Year",
-              "nativeQueryRef": "Year",
-              "active": true
+              "nativeQueryRef": "Year"
             }
           ]
         }
@@ -70,6 +69,40 @@
               "expr": {
                 "Literal": {
                   "Value": "'Year filter'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
+              "expr": {
+                "Literal": {
+                  "Value": "4D"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "4D"
+                }
+              }
+            },
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            },
+            "right": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
                 }
               }
             }
