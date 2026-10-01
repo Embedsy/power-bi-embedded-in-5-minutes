@@ -7,6 +7,10 @@ Two changes turn a read-only embed into an editor:
 - **Embed config** (`public/index.html`): `permissions: models.Permissions.All` and
   `viewMode: models.ViewMode.Edit`.
 
+It uses `RLS_REPORT_ID`, the RLS version of the sample report, so copies saved by a
+customer stay filtered to that customer. Without `?customer=` you edit as an admin
+with the `All Customers` role.
+
 ```bash
 npm run ep16
 # http://localhost:3000?customer=customer-a   same, with RLS applied

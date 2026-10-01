@@ -23,7 +23,7 @@ The other videos in the series are concepts and portal walkthroughs with no code
 1. Node.js 18 or later.
 2. A service principal with access to a workspace on a capacity. `04-service-principal`
    has the checklist and a script to test it.
-3. The sample report from `powerbi/` published to that workspace.
+3. Both sample reports from `powerbi/` published to that workspace.
 4. `cp .env.example .env` and fill it in. `.env` is git-ignored. Never commit secrets.
 
 ```bash
@@ -34,9 +34,14 @@ npm run ep05   # http://localhost:3000
 
 ## Sample report
 
-`powerbi/Embedded Sample.pbip` is the report used in the videos: customers, products
-and monthly sales, with an RLS role `Customer` for `customer-a` to `customer-f`.
-No data source to connect. Open it in Power BI Desktop, refresh and publish.
+`powerbi/` has the report used in the videos (customers, products and monthly sales)
+in two versions:
+
+- `Embedded Sample.pbip`: no row-level security. Used by most samples (`REPORT_ID`).
+- `Embedded Sample RLS.pbip`: the same report with an RLS role `Customer` for
+  `customer-a` to `customer-f`. Used by 06, 14 and 16 (`RLS_REPORT_ID`).
+
+No data source to connect. Open each in Power BI Desktop, refresh and publish.
 See `powerbi/README.md`.
 
 ## Shared code

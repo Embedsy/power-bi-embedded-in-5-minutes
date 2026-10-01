@@ -5,7 +5,7 @@ import express from 'express';
 import { fileURLToPath } from 'node:url';
 import { ConfidentialClientApplication } from '@azure/msal-node';
 
-const { TENANT_ID, CLIENT_ID, CLIENT_SECRET, WORKSPACE_ID, REPORT_ID, DEFAULT_ROLE, PORT = 3000 } = process.env;
+const { TENANT_ID, CLIENT_ID, CLIENT_SECRET, WORKSPACE_ID, REPORT_ID, PORT = 3000 } = process.env;
 
 const msal = new ConfidentialClientApplication({
   auth: { clientId: CLIENT_ID, clientSecret: CLIENT_SECRET, authority: `https://login.microsoftonline.com/${TENANT_ID}` },
@@ -34,8 +34,6 @@ app.get('/api/embed-config', async (_req, res) => {
     const token = await powerBI('/GenerateToken', {
       reports: [{ id: report.id }],
       datasets: [{ id: report.datasetId }],
-      // The sample model has row-level security, so the token needs an identity (see 06-rls)
-      ...(DEFAULT_ROLE && { identities: [{ username: 'demo', roles: [DEFAULT_ROLE], datasets: [report.datasetId] }] }),
     });
     res.json({ reportId: report.id, embedUrl: report.embedUrl, accessToken: token.token, expiration: token.expiration });
   } catch (err) {

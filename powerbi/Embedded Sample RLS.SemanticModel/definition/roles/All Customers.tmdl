@@ -1,0 +1,7 @@
+/// No filter. With RLS on the model, a service principal must always pass an identity,
+/// so a user who may see every customer gets this role (the admin view in 16-edit-mode).
+role 'All Customers'
+	modelPermission: read
+
+	annotation PBI_Id = 30b6c91073c74484b7c777b24c44f00c
+

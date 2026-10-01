@@ -1,0 +1,62 @@
+/// Product catalogue with list prices
+table Products
+	lineageTag: 068f80c7-519d-0528-fb08-e82137a72131
+
+	column ProductKey
+		dataType: int64
+		isHidden
+		isKey
+		formatString: 0
+		lineageTag: 867c8c99-e915-2e3c-8af3-eec023190b27
+		summarizeBy: none
+		sourceColumn: ProductKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column Product
+		dataType: string
+		lineageTag: 31e87227-62a2-2702-dca2-24be7c1d23e5
+		summarizeBy: none
+		sourceColumn: Product
+
+		annotation SummarizationSetBy = Automatic
+
+	column Category
+		dataType: string
+		lineageTag: 92e19644-0930-6401-856e-bdfdc364f10d
+		summarizeBy: none
+		sourceColumn: Category
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'List Price'
+		dataType: decimal
+		formatString: #,0
+		lineageTag: 1c3f5a17-ca7f-f46b-efb1-92f365485f29
+		summarizeBy: none
+		sourceColumn: List Price
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Products = m
+		mode: import
+		source =
+				let
+				    Source = #table(
+				        type table [ProductKey = Int64.Type, Product = text, Category = text, #"List Price" = Currency.Type],
+				        {
+				        {1, "Starter Plan", "Subscriptions", 49},
+				        {2, "Pro Plan", "Subscriptions", 149},
+				        {3, "Enterprise Plan", "Subscriptions", 499},
+				        {4, "Onboarding", "Services", 1200},
+				        {5, "Training Day", "Services", 900},
+				        {6, "Premium Support", "Services", 300},
+				        {7, "Data Connector", "Add-ons", 99},
+				        {8, "Extra Storage", "Add-ons", 29}
+				        }
+				    )
+				in
+				    Source
+
+	annotation PBI_ResultType = Table
+

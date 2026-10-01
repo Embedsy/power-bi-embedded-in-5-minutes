@@ -3,7 +3,7 @@
 // trigger, a Logic App) and send the files with Microsoft Graph sendMail.
 // Usage: npm run ep14
 import { mkdir, writeFile } from 'node:fs/promises';
-import { env, exportReport } from '../shared/powerbi.js';
+import { config, env, exportReport } from '../shared/powerbi.js';
 
 // Who gets which data. In a real system this is a table, not a constant.
 const RECIPIENTS = [
@@ -19,6 +19,7 @@ for (const recipient of RECIPIENTS) {
   console.log(`Exporting for ${recipient.username}...`);
   const file = await exportReport({
     format: 'PDF',
+    reportId: config.rlsReportId,
     identity: { username: recipient.username, roles: [ROLE] },
   });
   const path = new URL(`${recipient.username}${file.extension}`, outDir);

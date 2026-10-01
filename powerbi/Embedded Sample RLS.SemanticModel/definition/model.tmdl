@@ -18,4 +18,6 @@ ref table Customers
 ref table Products
 ref table Sales
 
+ref role Customer
+ref role 'All Customers'
 

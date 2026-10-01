@@ -17,6 +17,7 @@ export function env(name, fallback) {
 export const config = {
   get workspaceId() { return env('WORKSPACE_ID'); },
   get reportId() { return env('REPORT_ID'); },
+  get rlsReportId() { return env('RLS_REPORT_ID'); },
   port: Number(process.env.PORT) || 3000,
 };
 
@@ -64,14 +65,6 @@ export async function listReports(workspaceId = config.workspaceId) {
   return (await pbi(`/groups/${workspaceId}/reports`)).value;
 }
 
-// A semantic model with RLS always needs an identity when a service principal asks for
-// a token. Samples that aren't about RLS use this one (see DEFAULT_ROLE in .env.example).
-function defaultIdentities(datasetIds) {
-  const role = process.env.DEFAULT_ROLE;
-  if (!role) return undefined;
-  return [{ username: process.env.DEFAULT_USERNAME || 'demo', roles: [role], datasets: datasetIds }];
-}
-
 // Embed token via the multi-resource GenerateToken API.
 //   identities        RLS effective identities (see 06-rls)
 //   lifetimeInMinutes shorter tokens, handy for testing refresh (see 10-token-refresh)
@@ -91,14 +84,13 @@ export function generateEmbedToken({
     datasets: datasetIds.map((id) => ({ id })),
   };
   if (allowSaveAs) body.targetWorkspaces = [{ id: workspaceId }];
-  const effective = identities || defaultIdentities(datasetIds);
-  if (effective) body.identities = effective;
+  if (identities) body.identities = identities;
   if (lifetimeInMinutes) body.lifetimeInMinutes = lifetimeInMinutes;
   return pbi('/GenerateToken', { method: 'POST', body: JSON.stringify(body) });
 }
 
 // Everything the browser needs to embed one report.
-// Pass `identity: { username, roles }` for an RLS semantic model.
+// Pass `identity: { username, roles }` for the RLS report (config.rlsReportId).
 export async function embedConfig({ identity, ...options } = {}) {
   const report = await getReport(options.reportId);
   const identities = identity ? [{ ...identity, datasets: [report.datasetId] }] : undefined;
@@ -128,8 +120,7 @@ export async function exportReport({
   const body = { format, powerBIReportConfiguration: {} };
   if (state) body.powerBIReportConfiguration.defaultBookmark = { state };
   const { datasetId } = await getReport(reportId, workspaceId);
-  const identities = identity ? [{ ...identity, datasets: [datasetId] }] : defaultIdentities([datasetId]);
-  if (identities) body.powerBIReportConfiguration.identities = identities;
+  if (identity) body.powerBIReportConfiguration.identities = [{ ...identity, datasets: [datasetId] }];
 
   let job = await pbi(`${base}/ExportTo`, { method: 'POST', body: JSON.stringify(body) });
   while (job.status === 'NotStarted' || job.status === 'Running') {

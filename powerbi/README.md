@@ -1,7 +1,15 @@
 # Sample report
 
-`Embedded Sample.pbip` is the report used in every demo. It's a Power BI project
-(PBIP), so the model and report are plain text and diff nicely in Git.
+The report used in every demo, in two versions:
+
+| Project | Row-level security | Used by | `.env` |
+|---|---|---|---|
+| `Embedded Sample.pbip` | none | 01 to 05, 09 to 13 | `REPORT_ID` |
+| `Embedded Sample RLS.pbip` | roles `Customer` and `All Customers` | 06, 12, 14, 16 | `RLS_REPORT_ID` |
+
+They're identical apart from the roles, so the early videos don't have to deal with RLS.
+Both are Power BI projects (PBIP): the model and report are plain text and diff nicely
+in Git. If you change the layout or the model, change both.
 
 The data is generated inside Power Query, so there is no data source, no gateway
 and no credentials to set up. Refresh works in the service as is.
@@ -18,12 +26,13 @@ and no credentials to set up. Refresh works in the service as is.
 Measures: Revenue, Units, Active Customers, Revenue per Customer. Every table and
 measure has a description; keys are hidden; the date table is marked.
 
-**RLS role `Customer`:** `[CustomerKey] = USERNAME()` on Customers. The embed token
-passes the customer key as the username, so `customer-a` only sees Alpine Retail.
+RLS version only:
 
-**RLS role `All Customers`:** no filter. Once a model has RLS, a service principal has
-to pass an identity for every embed token. The samples that aren't about RLS use this
-role (`DEFAULT_ROLE` in `.env`).
+- **Role `Customer`:** `[CustomerKey] = USERNAME()` on Customers. The embed token
+  passes the customer key as the username, so `customer-a` only sees Alpine Retail.
+- **Role `All Customers`:** no filter. Once a model has RLS, a service principal has
+  to pass an identity for every embed token, including for users who may see
+  everything. `16-edit-mode` uses it for the admin view.
 
 ## Report
 
@@ -45,10 +54,14 @@ Every visual has a title, so `page.getVisuals()` in `13-single-visual` lists the
 
 ## Publish
 
-1. Open `Embedded Sample.pbip` in Power BI Desktop and click Refresh.
-2. Modeling > View as > Customer, other user `customer-a`: only Alpine Retail shows.
+Do this for both projects:
+
+1. Open the `.pbip` in Power BI Desktop and click Refresh.
+2. RLS version only: Modeling > View as > Customer, other user `customer-a`: only
+   Alpine Retail shows.
 3. Publish to the workspace your service principal can access.
-4. Copy the report ID from the URL (`.../reports/<REPORT_ID>/...`) and the workspace ID
-   (`.../groups/<WORKSPACE_ID>/...`) into `.env`.
+4. Copy the report ID from the URL (`.../reports/<id>/...`) into `.env`: `REPORT_ID` for
+   `Embedded Sample`, `RLS_REPORT_ID` for `Embedded Sample RLS`. The workspace ID is
+   in the same URL (`.../groups/<WORKSPACE_ID>/...`).
 
 For the filter demos (09 and 13) use table `Customers`, column `Region`, value `Europe`.

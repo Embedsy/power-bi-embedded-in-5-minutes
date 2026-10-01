@@ -17,7 +17,8 @@ npm run ep14           # PDFs land in 14-scheduled-export/out/
 
 ## Requirements
 
-- Same as 11, plus an RLS role (`RLS_ROLE`, default `Customer`).
+- Same as 11, plus the RLS version of the sample report (`RLS_REPORT_ID`) and its role
+  (`RLS_ROLE`, default `Customer`).
 - Exporting with an RLS identity needs the service principal to be Contributor or Admin
   on the workspace and have write permission on the semantic model.
 - Sending mail with Graph needs the `Mail.Send` application permission, ideally limited

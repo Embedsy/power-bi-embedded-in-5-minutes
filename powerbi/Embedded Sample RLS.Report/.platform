@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Embedded Sample RLS"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "ce2ef211-1bef-4734-953e-76d36b31d6ba"
+  }
+}
