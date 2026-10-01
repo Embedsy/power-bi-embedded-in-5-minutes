@@ -7,7 +7,8 @@ RLS role to that username before any data leaves the service.
 
 This sample embeds `RLS_REPORT_ID`, the RLS version of the sample report
 (`powerbi/Embedded Sample RLS.pbip`). It already has the role: `Customer`, with
-`[CustomerKey] = USERNAME()` on the Customers table. To build it yourself in
+`[CustomerKey] = USERNAME() || [UserEmail] = USERNAME()` on the Customers table
+(the email half is only there so you can test the role with a real user in the service). To build it yourself in
 Power BI Desktop: Modeling > Manage roles, add the role and filter, test with
 View as, publish.
 
